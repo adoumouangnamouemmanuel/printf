@@ -1,143 +1,196 @@
 #include "main.h"
 
-/*************GET FLAGS*********************************/
+/************************* PRINT CHARACTER *************************/
 
 /**
- * get_flags - Calculates active flags
- * @format: Formatted string in which to print the arguments
- * @i: take a parameter.
- * 
- * Return: Flags:
+ * print_char_custom - Prints a character
+ * @args: Variable arguments list
+ * @buffer: Buffer array to handle print
+ * @flags: Active flags
+ * @width: Width
+ * @precision: Precision
+ * @size: Size specifier
+ * Return: Number of characters printed
  */
-int get_flags(const char *format, int *i)
+int print_char_custom(va_list args, char buffer[],
+		int flags, int width, int precision, int size)
 {
-	/* - + 0 # ' ' */
-	/* 1 2 4 8  16 */
-	int j, curr_i;
-	int flags = 0;
-	const char FLAGS_CH[] = {'-', '+', '0', '#', ' ', '\0'};
-	const int FLAGS_ARR[] = {F_MINUS, F_PLUS, F_ZERO, F_HASH, F_SPACE, 0};
+	char c = va_arg(args, int);
+	int printed_chars = 0;
 
-	for (curr_i = *i + 1; format[curr_i] != '\0'; curr_i++)
-	{
-		for (j = 0; FLAGS_CH[j] != '\0'; j++)
-			if (format[curr_i] == FLAGS_CH[j])
-			{
-				flags |= FLAGS_ARR[j];
-				break;
-			}
-
-		if (FLAGS_CH[j] == 0)
-			break;
-	}
-
-	*i = curr_i - 1;
-
-	return (flags);
+	return (handle_write_char(c, buffer, flags, width, precision, size));
 }
 
-/*************************GET PRECISION********************/
+/************************* PRINT STRING *************************/
 
 /**
- * get_precision - Calculates the precision for printing
- * @format: Formatted string in which to print the arguments
- * @i: List of arguments to be printed.
- * @list: list of arguments.
- *
- * Return: Precision.
+ * print_string_custom - Prints a string
+ * @args: Variable arguments list
+ * @buffer: Buffer array to handle print
+ * @flags: Active flags
+ * @width: Width
+ * @precision: Precision
+ * @size: Size specifier
+ * Return: Number of characters printed
  */
-int get_precision(const char *format, int *i, va_list list)
+int print_string_custom(va_list args, char buffer[],
+		int flags, int width, int precision, int size)
 {
-	int curr_i = *i + 1;
-	int precision = -1;
+	int len = 0, i;
+	char *str = va_arg(args, char *);
 
-	if (format[curr_i] != '.')
-		return (precision);
-
-	precision = 0;
-
-	for (curr_i += 1; format[curr_i] != '\0'; curr_i++)
+	UNUSED(buffer);
+	UNUSED(flags);
+	UNUSED(width);
+	UNUSED(precision);
+	UNUSED(size);
+	if (str == NULL)
 	{
-		if (is_digit(format[curr_i]))
+		str = "(null)";
+		if (precision >= 6)
+			str = "      ";
+	}
+
+	while (str[len] != '\0')
+		len++;
+
+	if (precision >= 0 && precision < len)
+		len = precision;
+
+	if (width > len)
+	{
+		if (flags & F_MINUS)
 		{
-			precision *= 10;
-			precision += format[curr_i] - '0';
-		}
-		else if (format[curr_i] == '*')
-		{
-			curr_i++;
-			precision = va_arg(list, int);
-			break;
+			write(1, &str[0], len);
+			for (i = width - len; i > 0; i--)
+				write(1, " ", 1);
+			return (width);
 		}
 		else
-			break;
+		{
+			for (i = width - len; i > 0; i--)
+				write(1, " ", 1);
+			write(1, &str[0], len);
+			return (width);
+		}
 	}
-
-	*i = curr_i - 1;
-
-	return (precision);
+	return (write(1, str, len));
 }
 
-/********************************GET SIZE*****************/
+
+/************************* PRINT PERCENT SIGN *************************/
 
 /**
- * get_size -Calculates the size to cast the argument
- * @format: Formatted string in which to print the arguments
- * @i: List of arguments to be printed.
- *
- * Return: Precision.
+ * print_percent_custom - Prints a percent sign
+ * @args: Variable arguments list
+ * @buffer: Buffer array to handle print
+ * @flags: Active flags
+ * @width: Width
+ * @precision: Precision
+ * @size: Size specifier
+ * Return: Number of characters printed
  */
-int get_size(const char *format, int *i)
+int print_percent_custom(va_list args, char buffer[],
+		int flags, int width, int precision, int size)
 {
-	int curr_i = *i + 1;
-	int size = 0;
+	UNUSED(args);
+	UNUSED(buffer);
+	UNUSED(flags);
+	UNUSED(width);
+	UNUSED(precision);
+	UNUSED(size);
 
-	if (format[curr_i] == 'l')
-		size = S_LONG;
-	else if (format[curr_i] == 'h')
-		size = S_SHORT;
-
-	if (size == 0)
-		*i = curr_i - 1;
-	else
-		*i = curr_i;
-
-	return (size);
+	return (write(1, "%%", 1));
 }
 
-/********************GET WIDTH******************/
+/************************* PRINT INTEGER *************************/
 
 /**
- * get_width - Calculates the width for printing
- * @format: Formatted string in which to print the arguments.
- * @i: List of arguments to be printed.
- * @list: list of arguments.
- *
- * Return: width.
+ * print_int_custom - Prints an integer
+ * @args: Variable arguments list
+ * @buffer: Buffer array to handle print
+ * @flags: Active flags
+ * @width: Width
+ * @precision: Precision
+ * @size: Size specifier
+ * Return: Number of characters printed
  */
-int get_width(const char *format, int *i, va_list list)
+int print_int_custom(va_list args, char buffer[],
+		int flags, int width, int precision, int size)
 {
-	int curr_i;
-	int width = 0;
+	int i = BUFF_SIZE - 2;
+	int is_neg = 0;
+	long int n = va_arg(args, long int);
+	unsigned long int nums;
 
-	for (curr_i = *i + 1; format[curr_i] != '\0'; curr_i++)
+	n = convert_size_number(n, size);
+
+	if (n == 0)
+		buffer[i--] = '0';
+
+	buffer[BUFF_SIZE - 1] = '\0';
+	nums = (unsigned long int)n;
+
+	if (n < 0)
 	{
-		if (is_digit(format[curr_i]))
-		{
-			width *= 10;
-			width += format[curr_i] - '0';
-		}
-		else if (format[curr_i] == '*')
-		{
-			curr_i++;
-			width = va_arg(list, int);
-			break;
-		}
-		else
-			break;
+		nums = (unsigned long int)((-1) * n);
+		is_neg = 1;
 	}
 
-	*i = curr_i - 1;
+	while (nums > 0)
+	{
+		buffer[i--] = (nums % 10) + '0';
+		nums /= 10;
+	}
+	i++;
 
-	return (width);
+	return (write_number(is_neg, i, buffer, flags, width, precision, size));
+}
+
+
+/************************* PRINT BINARY *************************/
+
+/**
+ * print_binary_custom - Prints a binary number
+ * @args: Variable arguments list
+ * @buffer: Buffer array to handle print
+ * @flags: Active flags
+ * @width: Width
+ * @precision: Precision
+ * @size: Size specifier
+ * Return: Number of characters printed
+ */
+int print_binary_custom(va_list args, char buffer[],
+		int flags, int width, int precision, int size)
+{
+	unsigned int j, k, i, sum;
+	unsigned int a[32];
+	int count;
+
+	UNUSED(buffer);
+	UNUSED(flags);
+	UNUSED(width);
+	UNUSED(precision);
+	UNUSED(size);
+
+	j = va_arg(args, unsigned int);
+	k = 2147483648; /* (2 ^ 31) */
+	a[0] = j / k;
+	for (i = 1; i < 32; i++)
+	{
+		k /= 2;
+		a[i] = (j / k) % 2;
+	}
+	for (i = 0, sum = 0, count = 0; i < 32; i++)
+	{
+		sum += a[i];
+		if (sum || i == 31)
+		{
+			char x = '0' + a[i];
+
+			write(1, &x, 1);
+			count++;
+		}
+	}
+	return (count);
 }
