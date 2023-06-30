@@ -53,7 +53,7 @@ int print_string(va_list types, char buffer[],
 
 	if (precision >= 0 && precision < length)
 		length = precision;
-
+	
 	if (width > length)
 	{
 		if (flags & F_MINUS)
@@ -198,7 +198,8 @@ int print_binary(va_list types, char buffer[],
  * @size: Size specifier
  * Return: Number of chars printed.
  */
-int print_unsigned(va_list types, char buffer[], int flags, int width, int precision, int size)
+int print_unsigned(va_list types, char buffer[],
+		int flags, int width, int precision, int size)
 {
 	int i = BUFF_SIZE - 2;
 	unsigned long int num = va_arg(types, unsigned long int);
@@ -361,7 +362,7 @@ int print_pointer(va_list types, char buffer[],
 	int flags, int width, int precision, int size)
 {
 	char extra_c = 0, padd = ' ';
-	int ind = BUFF_SIZE - 2, length = 2, padd_start = 1; /* length=2, for '0x' */
+	int ind = BUFF_SIZE - 2, length = 2, padd_start = 1;
 	unsigned long num_addrs;
 	char map_to[] = "0123456789abcdef";
 	void *addrs = va_arg(types, void *);
