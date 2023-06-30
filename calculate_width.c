@@ -6,7 +6,7 @@
  * @index: List of arguments to be printed
  * @args: List of arguments
  *
- * Return: Width
+ * Return: The Width
  */
 int calculate_width(const char *format, int *index, va_list args)
 {
@@ -33,3 +33,4 @@ int calculate_width(const char *format, int *index, va_list args)
 	*index = curr_index - 1;
 
 	return (width);
+}

@@ -1,5 +1,3 @@
-calculate_size.c
-
 #include "main.h"
 
 /**

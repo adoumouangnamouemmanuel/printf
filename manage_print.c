@@ -3,7 +3,7 @@
 /************************* PRINT CHARACTER *************************/
 
 /**
- * print_char_custom - Prints a character
+ * print_ch - Prints a character
  * @args: Variable arguments list
  * @buffer: Buffer array to handle print
  * @flags: Active flags
@@ -12,11 +12,10 @@
  * @size: Size specifier
  * Return: Number of characters printed
  */
-int print_char_custom(va_list args, char buffer[],
+int print_ch(va_list args, char buffer[],
 		int flags, int width, int precision, int size)
 {
 	char c = va_arg(args, int);
-	int printed_chars = 0;
 
 	return (handle_write_char(c, buffer, flags, width, precision, size));
 }
@@ -24,7 +23,7 @@ int print_char_custom(va_list args, char buffer[],
 /************************* PRINT STRING *************************/
 
 /**
- * print_string_custom - Prints a string
+ * print_string - Prints a string
  * @args: Variable arguments list
  * @buffer: Buffer array to handle print
  * @flags: Active flags
@@ -33,7 +32,7 @@ int print_char_custom(va_list args, char buffer[],
  * @size: Size specifier
  * Return: Number of characters printed
  */
-int print_string_custom(va_list args, char buffer[],
+int print_string(va_list args, char buffer[],
 		int flags, int width, int precision, int size)
 {
 	int len = 0, i;
@@ -81,7 +80,7 @@ int print_string_custom(va_list args, char buffer[],
 /************************* PRINT PERCENT SIGN *************************/
 
 /**
- * print_percent_custom - Prints a percent sign
+ * print_percent - Prints a percent sign
  * @args: Variable arguments list
  * @buffer: Buffer array to handle print
  * @flags: Active flags
@@ -90,7 +89,7 @@ int print_string_custom(va_list args, char buffer[],
  * @size: Size specifier
  * Return: Number of characters printed
  */
-int print_percent_custom(va_list args, char buffer[],
+int print_percent(va_list args, char buffer[],
 		int flags, int width, int precision, int size)
 {
 	UNUSED(args);
@@ -106,7 +105,7 @@ int print_percent_custom(va_list args, char buffer[],
 /************************* PRINT INTEGER *************************/
 
 /**
- * print_int_custom - Prints an integer
+ * print_int - Prints an integer
  * @args: Variable arguments list
  * @buffer: Buffer array to handle print
  * @flags: Active flags
@@ -115,7 +114,7 @@ int print_percent_custom(va_list args, char buffer[],
  * @size: Size specifier
  * Return: Number of characters printed
  */
-int print_int_custom(va_list args, char buffer[],
+int print_int(va_list args, char buffer[],
 		int flags, int width, int precision, int size)
 {
 	int i = BUFF_SIZE - 2;
@@ -151,7 +150,7 @@ int print_int_custom(va_list args, char buffer[],
 /************************* PRINT BINARY *************************/
 
 /**
- * print_binary_custom - Prints a binary number
+ * print_binary - Prints a binary number
  * @args: Variable arguments list
  * @buffer: Buffer array to handle print
  * @flags: Active flags
@@ -160,7 +159,7 @@ int print_int_custom(va_list args, char buffer[],
  * @size: Size specifier
  * Return: Number of characters printed
  */
-int print_binary_custom(va_list args, char buffer[],
+int print_binary(va_list args, char buffer[],
 		int flags, int width, int precision, int size)
 {
 	unsigned int j, k, i, sum;

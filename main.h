@@ -1,6 +1,5 @@
 #ifndef MAIN_H
 #define MAIN_H
-
 #include <stdarg.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -35,16 +34,16 @@ int _printf(const char *format, ...);
 int handle_print(const char *fmat, int *ind, va_list args, char buffer[],
 	int flags, int width, int precision, int size);
 
-int print_char_custom(va_list args, char buffer[],
+int print_ch(va_list args, char buffer[],
 		int flags, int width, int precision, int size);
-int print_string_custom(va_list args, char buffer[],
+int print_string(va_list args, char buffer[],
 		int flags, int width, int precision, int size);
-int print_percent_custom(va_list args, char buffer[],
+int print_percent(va_list args, char buffer[],
 		int flags, int width, int precision, int size);
 
-int print_int_custom(va_list args, char buffer[],
+int print_int(va_list args, char buffer[],
 		int flags, int width, int precision, int size);
-int print_binary_custom(va_list args, char buffer[],
+int print_binary(va_list args, char buffer[],
 		int flags, int width, int precision, int size);
 int print_unsigned(va_list args, char buffer[],
 		int flags, int width, int precision, int size);

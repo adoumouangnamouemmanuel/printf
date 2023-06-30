@@ -1,5 +1,3 @@
-printf_function.c
-
 #include "main.h"
 
 void print_buffer(char buffer[], int *index);
@@ -33,10 +31,10 @@ int _printf(const char *format, ...)
 		else
 		{
 			print_buffer(buffer, &index);
-			new_flags = get_flags(format, &j);
-			new_width = get_width(format, &j, args);
-			new_precision = get_precision(format, &j, args);
-			new_size = get_size(format, &j);
+			new_flags = get_active_flags(format, &j);
+			new_width = calculate_width(format, &j, args);
+			new_precision = calculate_precision(format, &j, args);
+			new_size = calculate_cast_size(format, &j);
 			j++;
 			result = handle_print(format, &j, args, buffer,
 					      new_flags, new_width, new_precision, new_size);

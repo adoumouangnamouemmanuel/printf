@@ -14,9 +14,9 @@
 int handle_print(const char *fmat, int *ind, va_list args, char buffer[],
 	int flags, int width, int precision, int size)
 {
-	int i, no_len = 0, print_ch = -1;
+	int i, no_len = 0, printed_ch = -1;
 	fmat_t fmat_types[] = {
-		{'c', print_char}, {'s', print_string}, {'%', print_percent},
+		{'c', print_ch}, {'s', print_string}, {'%', print_percent},
 		{'i', print_int}, {'d', print_int}, {'b', print_binary},
 		{'u', print_unsigned}, {'o', print_octal}, {'x', print_hexadecimal},
 		{'X', print_hexa_upper}, {'p', print_pointer}, {'S', print_non_printable},
@@ -45,5 +45,5 @@ int handle_print(const char *fmat, int *ind, va_list args, char buffer[],
 		no_len += write(1, &fmat[*ind], 1);
 		return (no_len);
 	}
-	return (print_ch);
+	return (printed_ch);
 }

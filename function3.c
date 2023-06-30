@@ -47,7 +47,7 @@ int print_pointer(va_list args, char buffer[],
 
 	index++;
 
-	return (write_pointer(buffer, index, length,
+	return (write_memory_address(buffer, index, len,
 		width, flags, padd, extra_char, padd_start));
 }
 
@@ -79,10 +79,10 @@ int print_non_printable(va_list args, char buffer[],
 
 	while (str[i] != '\0')
 	{
-		if (is_printable_custom(str[i]))
+		if (is_printable(str[i]))
 			buffer[i + off_set] = str[i];
 		else
-			off_set += append_hex_code_custom(str[i], buffer, i + off_set);
+			off_set += append_hexa_code(str[i], buffer, i + off_set);
 
 		i++;
 	}
@@ -107,7 +107,7 @@ int print_reverse(va_list args, char buffer[],
 		int flags, int width, int precision, int size)
 {
 	char *str;
-	int count = 0;
+	int i, count = 0;
 
 	UNUSED(buffer);
 	UNUSED(flags);
@@ -150,7 +150,7 @@ int print_rot13string(va_list args, char buffer[],
 	int flags, int width, int precision, int size)
 {
 	char *str;
-	char *character;
+	char character;
 	unsigned int i, j;
 	int count = 0;
 	char input[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
